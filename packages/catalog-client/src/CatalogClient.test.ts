@@ -89,6 +89,8 @@ describe('CatalogClient', () => {
         }),
       );
 
+      server.printHandlers();
+
       const response = await client.getEntities(
         {
           filter: [
@@ -121,6 +123,8 @@ describe('CatalogClient', () => {
         }),
       );
 
+      server.printHandlers();
+
       const response = await client.getEntities(
         {
           filter: {
@@ -146,6 +150,8 @@ describe('CatalogClient', () => {
         }),
       );
 
+      server.printHandlers();
+
       const response = await client.getEntities(
         {
           fields: ['a.b', 'ö'],
@@ -163,6 +169,8 @@ describe('CatalogClient', () => {
         }),
       );
 
+      server.printHandlers();
+
       const response = await client.getEntities(
         {
           fields: ['apiVersion'],
@@ -176,21 +184,24 @@ describe('CatalogClient', () => {
       ]);
     });
 
-    it('builds paging parameters properly', async () => {
+    // eslint-disable-next-line jest/no-focused-tests
+    it.only('builds paging parameters properly', async () => {
       expect.assertions(2);
-
+      await new Promise(r => setTimeout(r, 1000));
       server.use(
         rest.get(`${mockBaseUrl}/entities`, (req, res, ctx) => {
           expect(req.url.search).toBe('?offset=1&limit=2&after=%3D');
           return res(ctx.json([]));
         }),
       );
+      await new Promise(r => setTimeout(r, 1000));
+      server.printHandlers();
 
       const response = await client.getEntities(
         { offset: 1, limit: 2, after: '=' },
         { token },
       );
-
+      await new Promise(r => setTimeout(r, 1000));
       expect(response.items).toEqual([]);
     });
   });
@@ -279,6 +290,8 @@ describe('CatalogClient', () => {
         }),
       );
 
+      server.printHandlers();
+
       await client.getLocationById('42', { token });
     });
 
@@ -291,6 +304,8 @@ describe('CatalogClient', () => {
           return res(ctx.json(defaultResponse));
         }),
       );
+
+      server.printHandlers();
 
       await client.getLocationById('42');
     });
